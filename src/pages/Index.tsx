@@ -1,8 +1,29 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import Icon from "@/components/ui/icon";
+import { useState } from "react";
 
 const Index = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: ""
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    alert(`Спасибо за обращение, ${formData.name}! Мы свяжемся с вами в ближайшее время.`);
+    setFormData({ name: "", email: "", message: "" });
+    setIsSubmitting(false);
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       {/* Animated Ducks Background */}
@@ -124,20 +145,110 @@ const Index = () => {
 
       {/* Contact Section */}
       <section id="contact" className="relative z-10 container mx-auto px-4 py-20 mb-20">
-        <div className="max-w-2xl mx-auto text-center animate-fade-in">
-          <h2 className="text-4xl font-bold mb-6">Готовы начать?</h2>
-          <p className="text-xl text-muted-foreground mb-8">
-            Свяжитесь с нами, чтобы обсудить ваш проект
-          </p>
-          <div className="flex gap-4 justify-center flex-wrap">
-            <Button size="lg" className="group">
-              <Icon name="Mail" size={20} className="mr-2" />
-              info@company.ru
-            </Button>
-            <Button size="lg" variant="outline" className="group">
-              <Icon name="Phone" size={20} className="mr-2" />
-              +7 (495) 123-45-67
-            </Button>
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12 animate-fade-in">
+            <h2 className="text-4xl font-bold mb-6">Готовы начать?</h2>
+            <p className="text-xl text-muted-foreground">
+              Свяжитесь с нами, чтобы обсудить ваш проект
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-12">
+            {/* Contact Info */}
+            <div className="space-y-6 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Icon name="Mail" size={24} className="text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Email</h3>
+                  <p className="text-muted-foreground">info@company.ru</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Icon name="Phone" size={24} className="text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Телефон</h3>
+                  <p className="text-muted-foreground">+7 (495) 123-45-67</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Icon name="MapPin" size={24} className="text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Адрес</h3>
+                  <p className="text-muted-foreground">г. Москва, ул. Примерная, д. 1</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Contact Form */}
+            <Card className="p-8 bg-card/50 backdrop-blur-sm border-muted animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium mb-2">
+                    Ваше имя
+                  </label>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    placeholder="Иван Иванов"
+                    required
+                    className="bg-background/50"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium mb-2">
+                    Email
+                  </label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="ivan@example.com"
+                    required
+                    className="bg-background/50"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium mb-2">
+                    Сообщение
+                  </label>
+                  <Textarea
+                    id="message"
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    placeholder="Расскажите о вашем проекте..."
+                    rows={4}
+                    required
+                    className="bg-background/50"
+                  />
+                </div>
+
+                <Button type="submit" size="lg" className="w-full group" disabled={isSubmitting}>
+                  {isSubmitting ? (
+                    <>
+                      <Icon name="Loader2" size={20} className="mr-2 animate-spin" />
+                      Отправка...
+                    </>
+                  ) : (
+                    <>
+                      Отправить сообщение
+                      <Icon name="Send" size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                    </>
+                  )}
+                </Button>
+              </form>
+            </Card>
           </div>
         </div>
       </section>
